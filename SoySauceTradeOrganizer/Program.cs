@@ -67,7 +67,7 @@ namespace SoySauceTradeOrganizer
 
                 var entryDateCell = ws.Cells["C" + excel_row_counter.ToString()];
                 entryDateCell.Value = tradeResult.EntryDate;
-                entryDateCell.Style.NumberFormat = "yyyy_MM_dd";
+                entryDateCell.Style.NumberFormat = "MM/dd/yyyy";
 
 
                 var cell = ws.Cells["D" + excel_row_counter.ToString()];

@@ -64,10 +64,14 @@ namespace SoySauceTradeOrganizer
                 var tradeResult = tradeList[i];
                 ws.Cells["A" + excel_row_counter.ToString()].Value = tradeResult.Ticker;
                 ws.Cells["B" + excel_row_counter.ToString()].Value = tradeResult.EnterDirection;
-                ws.Cells["C" + excel_row_counter.ToString()].Value = tradeResult.EntryDate;
+
+                var entryDateCell = ws.Cells["C" + excel_row_counter.ToString()];
+                entryDateCell.Value = tradeResult.EntryDate;
+                entryDateCell.Style.NumberFormat = "MM/dd/yyyy";
+
 
                 var cell = ws.Cells["D" + excel_row_counter.ToString()];
-                var entry_link = string.Format(ENTRY_FILE, tradeResult.EntryDate.ToString("yyyy_MM_dd"), tradeResult.Ticker);
+                var entry_link = string.Format(ENTRY_FILE, tradeResult.EntryDate.ToString("dd/MM/yyyy"), tradeResult.Ticker);
                 cell.Formula = string.Format("=HYPERLINK(\"{0}\", \"{1}\")", entry_link, tradeResult.EnterPrice);
                 cell.Style.Font.UnderlineStyle = UnderlineStyle.Single;
                 cell.Style.Font.Color = SpreadsheetColor.FromName(ColorName.Blue);
@@ -93,6 +97,15 @@ namespace SoySauceTradeOrganizer
                 cell.Formula = string.Format("=HYPERLINK(\"{0}\", \"{1}\")", p30_link, "P30");
                 cell.Style.Font.UnderlineStyle = UnderlineStyle.Single;
                 cell.Style.Font.Color = SpreadsheetColor.FromName(ColorName.Blue);
+
+                //if it is winning, hightlight the exist value cell
+                //assume the exit price > target price is winning here
+                if (tradeResult.ExitPrice > tradeResult.TargetPrice)
+                {
+                    //this should not override the style set up in the previous section except font color
+                    //need to test to confirm
+                    ws.Cells["H" + excel_row_counter.ToString()].Style.Font.Color = SpreadsheetColor.FromName(ColorName.Green);
+                }
 
                 excel_row_counter++;
             }
